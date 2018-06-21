@@ -1,0 +1,34 @@
+<resources>
+    <string name="app_name">ClientSDK Sample</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_agent_path">Agent path</string>
+    <string name="prompt_name">Name (optional)</string>
+    <string name="prompt_email">Email (optional)</string>
+    <string name="prompt_phone">Phone (optional)</string>
+    <string name="action_sign_in">Sign in</string>
+    <string name="action_sign_out">Sign out</string>
+    <string name="action_chat">Chat</string>
+    <string name="action_call">Call</string>
+    <string name="action_login_type">Genesys login</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_phone">This phone number is invalid</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="error_login_failed">Failed to login!</string>
+    <string name="msg_please_wait">Please wait...</string>
+    <string name="msg_agent_available">Agent is available</string>
+    <string name="msg_agent_not_available">Agent is not available</string>
+    <string name="dialog_are_you_sure_logout">Are you sure you want to logout?</string>
+    <string name="msg_new_chat_message">New chat message</string>
+    <string name="msg_new_chat_request">New chat request</string>
+    <string name="msg_reply">Reply</string>
+
+    <!-- Strings related to Genesys login -->
+    <string name="prompt_genesys_server_url">Server url</string>
+    <string name="prompt_genesys_agent_url">Agent url</string>
+    <string name="prompt_genesys_first_name">First name</string>
+    <string name="prompt_genesys_last_name">Last name</string>
+    <string name="prompt_genesys_email">Email (optional)</string>
+    <string name="prompt_genesys_subject">Subject (optional)</string>
+
+</resources>
