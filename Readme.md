@@ -94,6 +94,19 @@ The UI of the SDK is implemented inside an activity - VideoActivity.
 </activity>
 ```
 
+## Obfuscating
+
+These lines should be added to the ProGuard Rules file:
+```
+-keep class net.sqlcipher.** {
+    *;
+}
+
+-keep class net.sqlcipher.database.** {
+    *;
+}
+```
+
 ## SDK API
 
 ### Obtain instance
