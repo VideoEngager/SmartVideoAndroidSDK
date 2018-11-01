@@ -199,7 +199,7 @@ videoClient.initGenesysClient(<genesys-url>, <agent-url>, <client-first-name>, <
 
 #### Call the agent
 
-Upon receiving the event for successful init the client can call the agent. Only video calls are supported.
+Upon receiving the event for successful init the client can call the agent.
 ```
 videoClient.callGenesysAgent(<is-audio-only>);
 ```
