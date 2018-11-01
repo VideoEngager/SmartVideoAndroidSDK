@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (mGenesysSwitch.isChecked()) {
-                    mVideoClient.callGenesysAgent();
+                    mVideoClient.callGenesysAgent(false);
                 } else {
                     mVideoClient.callAgent(false, false);
                 }

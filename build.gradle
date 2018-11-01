@@ -100,9 +100,9 @@ dependencies {
     implementation 'org.webrtc:google-webrtc:1.0.20492'
     implementation 'com.squareup.retrofit2:retrofit:2.3.0'
 
-    implementation(name:'core-sdk-304021728', ext:'aar')
-    implementation(name:'videolibrary-304021728', ext:'aar')
-    implementation(name:'clientsdk-304021728', ext:'aar')
+    implementation(name:'core-sdk-311011651', ext:'aar')
+    implementation(name:'videolibrary-311011651', ext:'aar')
+    implementation(name:'clientsdk-311011651', ext:'aar')
 
     implementation('com.crashlytics.sdk.android:crashlytics:2.8.0@aar') {
         transitive = true;
