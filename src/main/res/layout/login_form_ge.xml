@@ -24,6 +24,34 @@
         android:layout_height="wrap_content">
 
         <AutoCompleteTextView
+            android:id="@+id/genesysChatService"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/prompt_genesys_chat_service_name"
+            android:inputType="text"
+            android:maxLines="1"/>
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <AutoCompleteTextView
+            android:id="@+id/genesysAuthHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/prompt_genesys_auth_header"
+            android:inputType="text"
+            android:maxLines="1"/>
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <AutoCompleteTextView
             android:id="@+id/genesysAgentUrl"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

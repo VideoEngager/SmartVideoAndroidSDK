@@ -1,14 +1,18 @@
 package com.videoengager.clientsdk.sample;
 
+import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -51,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView mAgentStatusView;
     private Button mChatButton;
     private Button mCallButton;
+    private Button mCallButtonAudio;
     private Button mSignInButton;
     private Switch mGenesysSwitch;
 
@@ -58,11 +63,46 @@ public class MainActivity extends AppCompatActivity {
     private View mLoginFormGe;
 
     private AutoCompleteTextView mGenesysServer;
+    private AutoCompleteTextView mGenesysChatServiceName;
+    private AutoCompleteTextView mGenesysAuthHeader;
     private AutoCompleteTextView mGenesysAgent;
     private AutoCompleteTextView mGenesysFirstName;
     private AutoCompleteTextView mGenesysLastName;
     private AutoCompleteTextView mGenesysEmail;
     private AutoCompleteTextView mGenesysSubject;
+
+    static int PERMISSION_ALL = 1;
+    static String[] PERMISSIONS = {
+            Manifest.permission.INTERNET,
+            Manifest.permission.ACCESS_NETWORK_STATE,
+            Manifest.permission.ACCESS_WIFI_STATE,
+            Manifest.permission.MODIFY_AUDIO_SETTINGS,
+            Manifest.permission.RECORD_AUDIO,
+            Manifest.permission.READ_PHONE_STATE,
+            Manifest.permission.WAKE_LOCK,
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.VIBRATE,
+            Manifest.permission.CAMERA,
+            Manifest.permission.BLUETOOTH,
+            Manifest.permission.BLUETOOTH_ADMIN,
+            Manifest.permission.CHANGE_NETWORK_STATE,
+            Manifest.permission.WRITE_CONTACTS,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_SMS,
+            Manifest.permission.CAMERA
+    };
+
+    public static boolean hasPermissions(Context context, String... permissions) {
+        if (context != null && permissions != null) {
+            for (String permission : permissions) {
+                if (ContextCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +131,8 @@ public class MainActivity extends AppCompatActivity {
         mPhoneView = (AutoCompleteTextView) findViewById(R.id.phone);
 
         mGenesysServer = (AutoCompleteTextView) findViewById(R.id.genesysServerUrl);
+        mGenesysChatServiceName = (AutoCompleteTextView) findViewById(R.id.genesysChatService);
+        mGenesysAuthHeader = (AutoCompleteTextView) findViewById(R.id.genesysAuthHeader);
         mGenesysAgent = (AutoCompleteTextView) findViewById(R.id.genesysAgentUrl);
         mGenesysFirstName = (AutoCompleteTextView) findViewById(R.id.genesysFirstName);
         mGenesysLastName = (AutoCompleteTextView) findViewById(R.id.genesysLastName);
@@ -126,6 +168,17 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+        mCallButtonAudio = (Button) findViewById(R.id.call_button_audio);
+        mCallButtonAudio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mGenesysSwitch.isChecked()) {
+                    mVideoClient.callGenesysAgent(true);
+                } else {
+                    mVideoClient.callAgent(true, false);
+                }
+            }
+        });
 
         mSignInButton = (Button) findViewById(R.id.sign_in_button);
         mSignInButton.setOnClickListener(new View.OnClickListener() {
@@ -147,6 +200,10 @@ public class MainActivity extends AppCompatActivity {
         mLoginFormView = findViewById(R.id.login_form);
         mEngageFormView = findViewById(R.id.engage_form);
         mProgressView = findViewById(R.id.login_progress);
+
+        if(!hasPermissions(this, PERMISSIONS)){
+            ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
+        }
     }
 
     @Override
@@ -252,6 +309,8 @@ public class MainActivity extends AppCompatActivity {
     private void attemptLoginGenesys() {
         // Reset errors.
         mGenesysServer.setError(null);
+        mGenesysChatServiceName.setError(null);
+        mGenesysAuthHeader.setError(null);
         mGenesysAgent.setError(null);
         mGenesysFirstName.setError(null);
         mGenesysLastName.setError(null);
@@ -260,6 +319,8 @@ public class MainActivity extends AppCompatActivity {
 
         // Store values at the time of the login attempt.
         String serverUrl = mGenesysServer.getText().toString();
+        String serviceName = mGenesysChatServiceName.getText().toString();
+        String authHeader = mGenesysAuthHeader.getText().toString();
         String agentUrl = mGenesysAgent.getText().toString();
         String firstName = mGenesysFirstName.getText().toString();
         String lastName = mGenesysLastName.getText().toString();
@@ -272,6 +333,12 @@ public class MainActivity extends AppCompatActivity {
         if (TextUtils.isEmpty(serverUrl)) {
             mGenesysServer.setError(getString(R.string.error_field_required));
             focusView = mGenesysServer;
+            cancel = true;
+        }
+
+        if (!cancel && TextUtils.isEmpty(serviceName)) {
+            mGenesysChatServiceName.setError(getString(R.string.error_field_required));
+            focusView = mGenesysChatServiceName;
             cancel = true;
         }
 
@@ -309,7 +376,7 @@ public class MainActivity extends AppCompatActivity {
             showProgress(true);
             hideKeyboard();
             try {
-                loginGenesys(serverUrl, agentUrl, firstName, lastName, email, subject);
+                loginGenesys(serverUrl, serviceName, authHeader, agentUrl, firstName, lastName, email, subject);
             } catch (Exception exception) {
                 exception.printStackTrace();
             }
@@ -318,11 +385,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void initLogin() {
         mGenesysServer.setText("https://gme-004.devcloud.genesys.com:18180");
+        mGenesysChatServiceName.setText("request-chat");
         mGenesysAgent.setText("test.leadsecure.com/DeepS/JohnLe");
         mGenesysFirstName.setText("John");
         mGenesysLastName.setText("Smith");
         mGenesysEmail.setText("agent@one.com");
-        mGenesysSubject.setText("Sample Call");
+        mGenesysSubject.setText("Sample Video Call");
     }
 
     private boolean isEmailValid(String email) {
@@ -418,7 +486,7 @@ public class MainActivity extends AppCompatActivity {
         mVideoClient.init(agentPath, name, email, phone);
     }
 
-    private void loginGenesys(String serverUrl, String agentUrl, String firstName, String
+    private void loginGenesys(String serverUrl, String chatServiceName, String authHeaderValue, String agentUrl, String firstName, String
             lastName, String email, String subject) throws Exception {
         if (mIsConnected) {
             return;
@@ -458,7 +526,8 @@ public class MainActivity extends AppCompatActivity {
                 onActionButtonsUpdate(availableForCalls, availableForChat);
             }
         });
-        mVideoClient.initGenesysClient(serverUrl, agentUrl, firstName, lastName, email, subject);
+        mVideoClient.initGenesysClient(serverUrl, chatServiceName, authHeaderValue, agentUrl,
+                firstName, lastName, email, subject);
     }
 
     public void showChatSnackbar(final int resId) {
@@ -527,6 +596,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateActionButtons(boolean availableForCalls, boolean availableForChat) {
         mCallButton.setEnabled(availableForCalls);
+        mCallButtonAudio.setEnabled(availableForCalls);
         mChatButton.setEnabled(availableForChat);
         updateAgentStatus(availableForCalls || availableForChat);
     }

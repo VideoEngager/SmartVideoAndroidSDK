@@ -194,7 +194,7 @@ The SDK supports video calls to the Genesys workspace (which should has the Vide
 #### Init
 
 ```
-videoClient.initGenesysClient(<genesys-url>, <agent-url>, <client-first-name>, <client-last-name>, <client-email>, <subject>);
+videoClient.initGenesysClient(<genesys-base-url>, <genesys-chat-service-name>, <genesys-autorization-header-value>, <agent-url>, <client-first-name>, <client-last-name>, <client-email>, <subject>);
 ```
 
 #### Call the agent

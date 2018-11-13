@@ -9,7 +9,8 @@
     <string name="action_sign_in">Sign in</string>
     <string name="action_sign_out">Sign out</string>
     <string name="action_chat">Chat</string>
-    <string name="action_call">Call</string>
+    <string name="action_call">Video</string>
+    <string name="action_call_audio">Audio</string>
     <string name="action_login_type">Genesys login</string>
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_phone">This phone number is invalid</string>
@@ -24,7 +25,9 @@
     <string name="msg_reply">Reply</string>
 
     <!-- Strings related to Genesys login -->
-    <string name="prompt_genesys_server_url">Server url</string>
+    <string name="prompt_genesys_server_url">Server base URL</string>
+    <string name="prompt_genesys_chat_service_name">Chat service name</string>
+    <string name="prompt_genesys_auth_header">Authorization header value</string>
     <string name="prompt_genesys_agent_url">Agent url</string>
     <string name="prompt_genesys_first_name">First name</string>
     <string name="prompt_genesys_last_name">Last name</string>
