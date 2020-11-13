@@ -26,12 +26,9 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.crashlytics.android.Crashlytics;
 import com.videoengager.clientsdk.VideoClient;
 
 import java.text.DecimalFormatSymbols;
-
-import io.fabric.sdk.android.Fabric;
 
 /**
  * A login screen that offers login via agent path/name/email/phone.
@@ -107,7 +104,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_main);
 
         mGenesysSwitch = (Switch) findViewById(R.id.genesysSwitch);
@@ -226,14 +222,14 @@ public class MainActivity extends AppCompatActivity {
     private void showLogoutDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(getString(R.string.dialog_are_you_sure_logout));
-        builder.setPositiveButton(getString(R.string.yes),
+        builder.setPositiveButton(getString(android.R.string.yes),
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         logout();
                     }
                 });
-        builder.setNegativeButton(getString(R.string.no),
+        builder.setNegativeButton(getString(android.R.string.no),
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

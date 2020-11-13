@@ -1,48 +1,35 @@
-allprojects {
-    repositories {
-        jcenter()
-        maven {
-            url 'https://maven.google.com/'
-            name 'Google'
-        }
-    }
-}
 buildscript {
     repositories {
         jcenter()
-        maven {
-            url 'https://maven.google.com/'
-            name 'Google'
-        }
-        maven { url 'https://maven.fabric.io/public' }
         google()
+        maven {
+            url 'https://maven.google.com'
+        }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.3.0'
-        classpath 'com.google.gms:google-services:3.0.0'
-        classpath 'io.fabric.tools:gradle:1.+'
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
-    }
+        classpath 'com.android.tools.build:gradle:3.6.2'
+     }
 }
-
 apply plugin: 'com.android.application'
-apply plugin: 'io.fabric'
 
 repositories{
     flatDir{
         dirs 'libs'
     }
+    google()
+    jcenter()
+    maven {
+        url 'https://maven.google.com'
+    }
 }
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion '28.0.2'
+    compileSdkVersion 28
 
     defaultConfig {
         applicationId "com.videoengager.clientsdk.sample"
-        minSdkVersion 19
-        targetSdkVersion 26
+        minSdkVersion 16
+        targetSdkVersion 28
         versionCode 2
         versionName "1.0.2"
 
@@ -59,14 +46,12 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        debug {}
+    }
 
-        packagingOptions {
-            exclude 'lib/arm64-v8a/*'
-            exclude 'lib/armeabi/*'
-            exclude 'lib/mips64/*'
-            exclude 'lib/mips/*'
-            exclude 'lib/x86_64/*'
-        }
+    packagingOptions {
+        exclude 'lib/mips64/*'
+        exclude 'lib/mips/*'
     }
 }
 
@@ -78,7 +63,8 @@ task copy_release_apk() {
                 def destDir = (String) project.buildDirectory + "/"
                 from(inputDir)
                 into(destDir)
-                include('*.apk')
+                include('**/*.apk')
+                exclude("**/*unaligned.apk")
             }
         } else {
             println 'copy_files failed due to missing parameters'
@@ -87,25 +73,20 @@ task copy_release_apk() {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+   // implementation fileTree(dir: 'libs', include: ['*.jar','*.aar'])
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    implementation 'com.android.support:appcompat-v7:26.1.0'
-    implementation 'com.android.support:design:26.1.0'
-    testImplementation 'junit:junit:4.12'
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'com.android.support:design:28.0.0'
 
-    implementation 'com.squareup.picasso:picasso:2.5.2'
-    implementation 'com.android.support:recyclerview-v7:26.1.0'
+    implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation 'com.android.support:recyclerview-v7:28.0.0'
     implementation 'org.webrtc:google-webrtc:1.0.20492'
     implementation 'com.squareup.retrofit2:retrofit:2.3.0'
 
-    implementation(name:'core-sdk-401241740', ext:'aar')
-    implementation(name:'videolibrary-401241740', ext:'aar')
-    implementation(name:'clientsdk-401241740', ext:'aar')
-
-    implementation('com.crashlytics.sdk.android:crashlytics:2.8.0@aar') {
-        transitive = true;
-    }
+    implementation(name:'clientsdk-release', ext:'aar')
+    implementation(name:'videolibrary-release', ext:'aar')
+    implementation(name:'core-sdk-release', ext:'aar')
 
 }
